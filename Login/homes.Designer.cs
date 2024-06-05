@@ -36,6 +36,8 @@
             label2 = new Label();
             panel2 = new Panel();
             panel1 = new Panel();
+            label5 = new Label();
+            panel1.SuspendLayout();
             SuspendLayout();
             // 
             // label7
@@ -132,11 +134,23 @@
             // panel1
             // 
             panel1.BackColor = Color.LightGoldenrodYellow;
+            panel1.Controls.Add(label5);
             panel1.ForeColor = Color.FromArgb(220, 192, 128);
-            panel1.Location = new Point(231, 5);
+            panel1.Location = new Point(233, 5);
             panel1.Name = "panel1";
             panel1.Size = new Size(716, 563);
             panel1.TabIndex = 33;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Font = new Font("Segoe UI", 35F);
+            label5.ForeColor = Color.FromArgb(116, 86, 174);
+            label5.Location = new Point(44, 97);
+            label5.Name = "label5";
+            label5.Size = new Size(634, 62);
+            label5.TabIndex = 0;
+            label5.Text = "Welcome To Sino Organation";
             // 
             // homes
             // 
@@ -155,6 +169,8 @@
             ForeColor = SystemColors.ControlLight;
             Name = "homes";
             StartPosition = FormStartPosition.CenterScreen;
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -169,5 +185,6 @@
         private Label label2;
         private Panel panel2;
         private Panel panel1;
+        private Label label5;
     }
 }

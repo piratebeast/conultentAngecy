@@ -61,7 +61,7 @@
             universityDGV.BackgroundColor = Color.White;
             universityDGV.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             universityDGV.GridColor = Color.White;
-            universityDGV.Location = new Point(34, 237);
+            universityDGV.Location = new Point(24, 237);
             universityDGV.Name = "universityDGV";
             universityDGV.Size = new Size(684, 317);
             universityDGV.TabIndex = 32;
