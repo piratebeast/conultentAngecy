@@ -50,6 +50,10 @@
             label4 = new Label();
             label3 = new Label();
             label7 = new Label();
+            label5 = new Label();
+            sscGradeTb = new TextBox();
+            label13 = new Label();
+            hscGradeTb = new TextBox();
             ((System.ComponentModel.ISupportInitialize)universityDGV).BeginInit();
             panel3.SuspendLayout();
             panel2.SuspendLayout();
@@ -70,6 +74,10 @@
             // panel3
             // 
             panel3.BackColor = Color.White;
+            panel3.Controls.Add(label13);
+            panel3.Controls.Add(hscGradeTb);
+            panel3.Controls.Add(label5);
+            panel3.Controls.Add(sscGradeTb);
             panel3.Controls.Add(deletBtn);
             panel3.Controls.Add(editBtn);
             panel3.Controls.Add(saveBtn);
@@ -90,7 +98,7 @@
             // 
             deletBtn.Font = new Font("Tahoma", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             deletBtn.ForeColor = Color.FromArgb(116, 86, 174);
-            deletBtn.Location = new Point(527, 109);
+            deletBtn.Location = new Point(534, 131);
             deletBtn.Name = "deletBtn";
             deletBtn.Size = new Size(123, 36);
             deletBtn.TabIndex = 26;
@@ -102,7 +110,7 @@
             // 
             editBtn.Font = new Font("Tahoma", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             editBtn.ForeColor = Color.FromArgb(116, 86, 174);
-            editBtn.Location = new Point(389, 109);
+            editBtn.Location = new Point(534, 89);
             editBtn.Name = "editBtn";
             editBtn.Size = new Size(123, 36);
             editBtn.TabIndex = 26;
@@ -114,7 +122,7 @@
             // 
             saveBtn.Font = new Font("Tahoma", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             saveBtn.ForeColor = Color.FromArgb(116, 86, 174);
-            saveBtn.Location = new Point(248, 109);
+            saveBtn.Location = new Point(405, 131);
             saveBtn.Name = "saveBtn";
             saveBtn.Size = new Size(123, 36);
             saveBtn.TabIndex = 26;
@@ -209,6 +217,7 @@
             studentNameTb.Name = "studentNameTb";
             studentNameTb.Size = new Size(207, 32);
             studentNameTb.TabIndex = 22;
+            studentNameTb.TextChanged += studentNameTb_TextChanged;
             // 
             // label12
             // 
@@ -327,6 +336,50 @@
             label7.TabIndex = 40;
             label7.Text = "EmpName";
             // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label5.ForeColor = Color.FromArgb(116, 86, 174);
+            label5.Location = new Point(230, 75);
+            label5.Name = "label5";
+            label5.Size = new Size(70, 17);
+            label5.TabIndex = 28;
+            label5.Text = "SSC Grade";
+            // 
+            // sscGradeTb
+            // 
+            sscGradeTb.BackColor = Color.FromArgb(230, 231, 233);
+            sscGradeTb.BorderStyle = BorderStyle.None;
+            sscGradeTb.Font = new Font("MS UI Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            sscGradeTb.Location = new Point(230, 95);
+            sscGradeTb.Multiline = true;
+            sscGradeTb.Name = "sscGradeTb";
+            sscGradeTb.Size = new Size(116, 32);
+            sscGradeTb.TabIndex = 27;
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label13.ForeColor = Color.FromArgb(116, 86, 174);
+            label13.Location = new Point(352, 76);
+            label13.Name = "label13";
+            label13.Size = new Size(73, 17);
+            label13.TabIndex = 30;
+            label13.Text = "HSC Grade";
+            // 
+            // hscGradeTb
+            // 
+            hscGradeTb.BackColor = Color.FromArgb(230, 231, 233);
+            hscGradeTb.BorderStyle = BorderStyle.None;
+            hscGradeTb.Font = new Font("MS UI Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            hscGradeTb.Location = new Point(352, 96);
+            hscGradeTb.Multiline = true;
+            hscGradeTb.Name = "hscGradeTb";
+            hscGradeTb.Size = new Size(116, 32);
+            hscGradeTb.TabIndex = 29;
+            // 
             // university
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
@@ -378,5 +431,9 @@
         private Label label3;
         private Label label7;
         private Label label1;
+        private Label label13;
+        private TextBox hscGradeTb;
+        private Label label5;
+        private TextBox sscGradeTb;
     }
 }

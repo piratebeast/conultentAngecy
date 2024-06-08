@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using System.Data.SqlClient;
+using System.Drawing;
+using System.Text.RegularExpressions;
+using System.Windows.Forms;
 
 namespace Login
 {
@@ -18,16 +14,27 @@ namespace Login
             InitializeComponent();
             DisplayEmployees();
             employeesDGV.CellClick += employeesDGV_CellContentClick;
+            employeesDGV.CellFormatting += employeesDGV_CellFormatting;
         }
 
         SqlConnection Con = new SqlConnection("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\012sh\\OneDrive\\Documents\\consultantAgencyDb.mdf;Integrated Security=True;Connect Timeout=30");
 
-        private void DisplayEmployees()
+        private void DisplayEmployees(string phoneSearch = "")
         {
             Con.Open();
 
-            string Query = "Select * from Employeetbl"; // EmployeeTbl maybe
+            string Query = "Select * from EmployeeTbl";
+            if (!string.IsNullOrEmpty(phoneSearch))
+            {
+                Query += " WHERE EmpPhone LIKE @PhoneSearch";
+            }
+
             SqlDataAdapter sda = new SqlDataAdapter(Query, Con);
+            if (!string.IsNullOrEmpty(phoneSearch))
+            {
+                sda.SelectCommand.Parameters.AddWithValue("@PhoneSearch", "%" + phoneSearch + "%");
+            }
+
             SqlCommandBuilder builder = new SqlCommandBuilder(sda);
             var ds = new DataSet();
             sda.Fill(ds);
@@ -44,35 +51,55 @@ namespace Login
             empPasswordTb.Text = "";
         }
 
+        private bool ValidateInput()
+        {
+            if (string.IsNullOrEmpty(empNameTb.Text))
+            {
+                MessageBox.Show("Please Enter a valid Employee name.");
+                return false;
+            }
+            if (string.IsNullOrEmpty(empPasswordTb.Text))
+            {
+                MessageBox.Show("Enter a password.");
+                return false;
+            }
+            if (string.IsNullOrEmpty(empPhoneTb.Text) ||
+                !int.TryParse(empPhoneTb.Text, out int num) || num < 0)
+            {
+                MessageBox.Show("Please enter a valid phone number.");
+                return false;
+            }
+            if (string.IsNullOrEmpty(empAddressTb.Text))
+            {
+                MessageBox.Show("Please Enter a valid Address.");
+                return false;
+            }
+            return true;
+        }
+
         private void savebtn_Click(object sender, EventArgs e)
         {
-            if (empNameTb.Text == "" || empAddressTb.Text == "" ||
-                empPhoneTb.Text == "" || empPasswordTb.Text == "")
+            if (!ValidateInput()) return;
+
+            try
             {
-                MessageBox.Show("Missing Information");
+                Con.Open();
+                SqlCommand cmd = new SqlCommand("insert into EmployeeTbl (EmpName, EmpAdd, EmpPhone, EmpPass) values(@EN, @EA, @EP, @EPa)", Con);
+
+                cmd.Parameters.AddWithValue("@EN", empNameTb.Text);
+                cmd.Parameters.AddWithValue("@EA", empAddressTb.Text);
+                cmd.Parameters.AddWithValue("@EP", empPhoneTb.Text);
+                cmd.Parameters.AddWithValue("@EPa", empPasswordTb.Text);
+                cmd.ExecuteNonQuery();
+                MessageBox.Show("Employee Added");
+
+                Con.Close();
+                DisplayEmployees();
+                Clear();
             }
-            else
+            catch (Exception ex)
             {
-                try
-                {
-                    Con.Open();
-                    SqlCommand cmd = new SqlCommand("insert into EmployeeTbl (EmpName, EmpAdd, EmpPhone, EmpPass) values(@EN, @EA, @EP, @EPa)", Con);
-
-                    cmd.Parameters.AddWithValue("@EN", empNameTb.Text);
-                    cmd.Parameters.AddWithValue("@EA", empAddressTb.Text);
-                    cmd.Parameters.AddWithValue("@EP", empPhoneTb.Text);
-                    cmd.Parameters.AddWithValue("@EPa", empPasswordTb.Text);
-                    cmd.ExecuteNonQuery();
-                    MessageBox.Show("Employee Added");
-
-                    Con.Close();
-                    DisplayEmployees();
-                    Clear();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -105,34 +132,32 @@ namespace Login
 
         private void editbtn_Click(object sender, EventArgs e)
         {
-            if (empNameTb.Text == "" || empAddressTb.Text == "" ||
-                empPhoneTb.Text == "" || empPasswordTb.Text == "")
+            if (Key == 0)
             {
-                MessageBox.Show("Missing Information");
+                MessageBox.Show("Select an entry to edit.");
+                return;
             }
-            else
+            if (!ValidateInput()) return;
+            try
             {
-                try
-                {
-                    Con.Open();
-                    SqlCommand cmd = new SqlCommand("Update EmployeeTbl set EmpName=@EN, EmpAdd=@EA, EmpPhone=@EP, EmpPass=@EPa where EmpNum=@EKey", Con);
+                Con.Open();
+                SqlCommand cmd = new SqlCommand("Update EmployeeTbl set EmpName=@EN, EmpAdd=@EA, EmpPhone=@EP, EmpPass=@EPa where EmpNum=@EKey", Con);
 
-                    cmd.Parameters.AddWithValue("@EN", empNameTb.Text);
-                    cmd.Parameters.AddWithValue("@EA", empAddressTb.Text);
-                    cmd.Parameters.AddWithValue("@EP", empPhoneTb.Text);
-                    cmd.Parameters.AddWithValue("@EPa", empPasswordTb.Text);
-                    cmd.Parameters.AddWithValue("@EKey", Key);
-                    cmd.ExecuteNonQuery();
-                    MessageBox.Show("Employee Updated");
+                cmd.Parameters.AddWithValue("@EN", empNameTb.Text);
+                cmd.Parameters.AddWithValue("@EA", empAddressTb.Text);
+                cmd.Parameters.AddWithValue("@EP", empPhoneTb.Text);
+                cmd.Parameters.AddWithValue("@EPa", empPasswordTb.Text);
+                cmd.Parameters.AddWithValue("@EKey", Key);
+                cmd.ExecuteNonQuery();
+                MessageBox.Show("Employee Updated");
 
-                    Con.Close();
-                    DisplayEmployees();
-                    Clear();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+                Con.Close();
+                DisplayEmployees();
+                Clear();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
@@ -140,28 +165,91 @@ namespace Login
         {
             if (Key == 0)
             {
-                MessageBox.Show("Select An Employee");
+                MessageBox.Show("Select an entry to delete.");
+                return;
             }
-            else
-            {
-                try
-                {
-                    Con.Open();
-                    SqlCommand cmd = new SqlCommand("delete from EmployeeTbl where EmpNum = @EmpKey", Con);
 
+            SqlConnection con = new SqlConnection("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\012sh\\OneDrive\\Documents\\consultantAgencyDb.mdf;Integrated Security=True;Connect Timeout=30");
+
+            try
+            {
+                con.Open();
+
+                // Delete the selected employee
+                using (SqlCommand cmd = new SqlCommand("DELETE FROM EmployeeTbl WHERE EmpNum = @EmpKey", con))
+                {
                     cmd.Parameters.AddWithValue("@EmpKey", Key);
                     cmd.ExecuteNonQuery();
-                    MessageBox.Show("Employee Deleted");
-
-                    Con.Close();
-                    DisplayEmployees();
-                    Clear();
                 }
-                catch (Exception ex)
+
+                // Create a temporary table and copy existing data except the deleted row
+                using (SqlCommand cmd = new SqlCommand(@"
+            SELECT ROW_NUMBER() OVER (ORDER BY EmpNum) AS NewId, EmpName, EmpAdd, EmpPhone, EmpPass
+            INTO #TempEmployeeTbl
+            FROM EmployeeTbl;", con))
                 {
-                    MessageBox.Show(ex.Message);
+                    cmd.ExecuteNonQuery();
+                }
+
+                // Drop the original table
+                using (SqlCommand cmd = new SqlCommand("DROP TABLE EmployeeTbl;", con))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
+                // Create the original table again with the same schema
+                using (SqlCommand cmd = new SqlCommand(@"
+            CREATE TABLE EmployeeTbl (
+                EmpNum INT PRIMARY KEY IDENTITY(1,1),
+                EmpName NVARCHAR(50),
+                EmpAdd NVARCHAR(100),
+                EmpPhone NVARCHAR(15),
+                EmpPass NVARCHAR(50)
+            );", con))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
+                // Insert data back from the temporary table
+                using (SqlCommand cmd = new SqlCommand(@"
+            SET IDENTITY_INSERT EmployeeTbl ON;
+
+            INSERT INTO EmployeeTbl (EmpNum, EmpName, EmpAdd, EmpPhone, EmpPass)
+            SELECT NewId, EmpName, EmpAdd, EmpPhone, EmpPass
+            FROM #TempEmployeeTbl;
+
+            SET IDENTITY_INSERT EmployeeTbl OFF;", con))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
+                // Drop the temporary table
+                using (SqlCommand cmd = new SqlCommand("DROP TABLE #TempEmployeeTbl;", con))
+                {
+                    cmd.ExecuteNonQuery();
+                }
+
+                MessageBox.Show("Employee deleted and IDs reset.");
+
+                DisplayEmployees();
+                Clear();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+            finally
+            {
+                if (con.State == ConnectionState.Open)
+                {
+                    con.Close();
                 }
             }
+        }
+
+        private void employeesDGV_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            e.CellStyle.ForeColor = Color.Black;
         }
 
         private void label1_Click(object sender, EventArgs e)
@@ -190,6 +278,11 @@ namespace Login
             dashBoard obj = new dashBoard();
             obj.Show();
             this.Hide();
+        }
+
+        private void phoneSearchTb_TextChanged(object sender, EventArgs e)
+        {
+            DisplayEmployees(phoneSearchTb.Text);
         }
     }
 }

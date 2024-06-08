@@ -38,6 +38,8 @@
             panel1 = new Panel();
             employeesDGV = new DataGridView();
             panel3 = new Panel();
+            phoneSearchTb = new TextBox();
+            label5 = new Label();
             deletbtn = new Button();
             editbtn = new Button();
             savebtn = new Button();
@@ -172,6 +174,8 @@
             // panel3
             // 
             panel3.BackColor = Color.White;
+            panel3.Controls.Add(phoneSearchTb);
+            panel3.Controls.Add(label5);
             panel3.Controls.Add(deletbtn);
             panel3.Controls.Add(editbtn);
             panel3.Controls.Add(savebtn);
@@ -188,11 +192,34 @@
             panel3.Size = new Size(669, 179);
             panel3.TabIndex = 0;
             // 
+            // phoneSearchTb
+            // 
+            phoneSearchTb.BackColor = Color.FromArgb(230, 231, 233);
+            phoneSearchTb.BorderStyle = BorderStyle.None;
+            phoneSearchTb.Font = new Font("MS UI Gothic", 15.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            phoneSearchTb.Location = new Point(235, 94);
+            phoneSearchTb.Multiline = true;
+            phoneSearchTb.Name = "phoneSearchTb";
+            phoneSearchTb.Size = new Size(207, 32);
+            phoneSearchTb.TabIndex = 28;
+            phoneSearchTb.TextChanged += phoneSearchTb_TextChanged;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label5.ForeColor = Color.FromArgb(116, 86, 174);
+            label5.Location = new Point(235, 74);
+            label5.Name = "label5";
+            label5.Size = new Size(145, 17);
+            label5.TabIndex = 27;
+            label5.Text = "Search Phone Number";
+            // 
             // deletbtn
             // 
             deletbtn.Font = new Font("Tahoma", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             deletbtn.ForeColor = Color.FromArgb(116, 86, 174);
-            deletbtn.Location = new Point(524, 109);
+            deletbtn.Location = new Point(541, 136);
             deletbtn.Name = "deletbtn";
             deletbtn.Size = new Size(123, 36);
             deletbtn.TabIndex = 26;
@@ -204,7 +231,7 @@
             // 
             editbtn.Font = new Font("Tahoma", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             editbtn.ForeColor = Color.FromArgb(116, 86, 174);
-            editbtn.Location = new Point(386, 109);
+            editbtn.Location = new Point(541, 94);
             editbtn.Name = "editbtn";
             editbtn.Size = new Size(123, 36);
             editbtn.TabIndex = 26;
@@ -216,9 +243,9 @@
             // 
             savebtn.Font = new Font("Tahoma", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
             savebtn.ForeColor = Color.FromArgb(116, 86, 174);
-            savebtn.Location = new Point(245, 109);
+            savebtn.Location = new Point(429, 136);
             savebtn.Name = "savebtn";
-            savebtn.Size = new Size(123, 36);
+            savebtn.Size = new Size(106, 36);
             savebtn.TabIndex = 26;
             savebtn.Text = "Save";
             savebtn.UseVisualStyleBackColor = true;
@@ -298,6 +325,7 @@
             empPasswordTb.Location = new Point(235, 30);
             empPasswordTb.Multiline = true;
             empPasswordTb.Name = "empPasswordTb";
+            empPasswordTb.PasswordChar = '•';
             empPasswordTb.Size = new Size(207, 32);
             empPasswordTb.TabIndex = 23;
             // 
@@ -375,5 +403,7 @@
         private Button savebtn;
         private Label label12;
         private DataGridView employeesDGV;
+        private TextBox phoneSearchTb;
+        private Label label5;
     }
 }
