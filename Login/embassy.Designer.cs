@@ -35,6 +35,8 @@
             panel1 = new Panel();
             embassyDGV = new DataGridView();
             panel3 = new Panel();
+            deliveredCb = new ComboBox();
+            label5 = new Label();
             workPrgCb = new ComboBox();
             label1 = new Label();
             deletBtn = new Button();
@@ -133,6 +135,8 @@
             // panel3
             // 
             panel3.BackColor = Color.White;
+            panel3.Controls.Add(deliveredCb);
+            panel3.Controls.Add(label5);
             panel3.Controls.Add(workPrgCb);
             panel3.Controls.Add(label1);
             panel3.Controls.Add(deletBtn);
@@ -150,6 +154,27 @@
             panel3.Name = "panel3";
             panel3.Size = new Size(669, 179);
             panel3.TabIndex = 33;
+            // 
+            // deliveredCb
+            // 
+            deliveredCb.Font = new Font("MS UI Gothic", 15.75F);
+            deliveredCb.FormattingEnabled = true;
+            deliveredCb.Items.AddRange(new object[] { "Yes", "No" });
+            deliveredCb.Location = new Point(229, 142);
+            deliveredCb.Name = "deliveredCb";
+            deliveredCb.Size = new Size(178, 29);
+            deliveredCb.TabIndex = 30;
+            // 
+            // label5
+            // 
+            label5.AutoSize = true;
+            label5.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label5.ForeColor = Color.FromArgb(116, 86, 174);
+            label5.Location = new Point(229, 122);
+            label5.Name = "label5";
+            label5.Size = new Size(67, 17);
+            label5.TabIndex = 29;
+            label5.Text = "Delivered";
             // 
             // workPrgCb
             // 
@@ -401,5 +426,7 @@
         private Label label12;
         private ComboBox workPrgCb;
         private Label label1;
+        private ComboBox deliveredCb;
+        private Label label5;
     }
 }

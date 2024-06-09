@@ -165,18 +165,16 @@ namespace Login
         {
             if (Key == 0)
             {
-                MessageBox.Show("Select an entry to delete.");
+                MessageBox.Show("Select an entry to del ete.");
                 return;
             }
 
-            SqlConnection con = new SqlConnection("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\012sh\\OneDrive\\Documents\\consultantAgencyDb.mdf;Integrated Security=True;Connect Timeout=30");
-
             try
             {
-                con.Open();
+                Con.Open();
 
                 // Delete the selected employee
-                using (SqlCommand cmd = new SqlCommand("DELETE FROM EmployeeTbl WHERE EmpNum = @EmpKey", con))
+                using (SqlCommand cmd = new SqlCommand("DELETE FROM EmployeeTbl WHERE EmpNum = @EmpKey", Con))
                 {
                     cmd.Parameters.AddWithValue("@EmpKey", Key);
                     cmd.ExecuteNonQuery();
@@ -186,13 +184,13 @@ namespace Login
                 using (SqlCommand cmd = new SqlCommand(@"
             SELECT ROW_NUMBER() OVER (ORDER BY EmpNum) AS NewId, EmpName, EmpAdd, EmpPhone, EmpPass
             INTO #TempEmployeeTbl
-            FROM EmployeeTbl;", con))
+            FROM EmployeeTbl;", Con))
                 {
                     cmd.ExecuteNonQuery();
                 }
 
                 // Drop the original table
-                using (SqlCommand cmd = new SqlCommand("DROP TABLE EmployeeTbl;", con))
+                using (SqlCommand cmd = new SqlCommand("DROP TABLE EmployeeTbl;", Con))
                 {
                     cmd.ExecuteNonQuery();
                 }
@@ -205,7 +203,7 @@ namespace Login
                 EmpAdd NVARCHAR(100),
                 EmpPhone NVARCHAR(15),
                 EmpPass NVARCHAR(50)
-            );", con))
+            );", Con))
                 {
                     cmd.ExecuteNonQuery();
                 }
@@ -218,13 +216,13 @@ namespace Login
             SELECT NewId, EmpName, EmpAdd, EmpPhone, EmpPass
             FROM #TempEmployeeTbl;
 
-            SET IDENTITY_INSERT EmployeeTbl OFF;", con))
+            SET IDENTITY_INSERT EmployeeTbl OFF;", Con))
                 {
                     cmd.ExecuteNonQuery();
                 }
 
                 // Drop the temporary table
-                using (SqlCommand cmd = new SqlCommand("DROP TABLE #TempEmployeeTbl;", con))
+                using (SqlCommand cmd = new SqlCommand("DROP TABLE #TempEmployeeTbl;", Con))
                 {
                     cmd.ExecuteNonQuery();
                 }
@@ -240,9 +238,9 @@ namespace Login
             }
             finally
             {
-                if (con.State == ConnectionState.Open)
+                if (Con.State == ConnectionState.Open)
                 {
-                    con.Close();
+                    Con.Close();
                 }
             }
         }

@@ -51,7 +51,16 @@ namespace Login
             }
         }
 
-        public int TotalCases { get; set; } = 0;
+        private int totalCases;
+        public int TotalCases
+        {
+            get { return totalCases; }
+            set
+            {
+                totalCases = value;
+                Invalidate(); // Redraw control when total cases change
+            }
+        }
 
         public CircularProgressBar()
         {

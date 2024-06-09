@@ -35,6 +35,8 @@
             label6 = new Label();
             label7 = new Label();
             label13 = new Label();
+            restartbtn2 = new Button();
+            label9 = new Label();
             panel2.SuspendLayout();
             SuspendLayout();
             // 
@@ -50,6 +52,7 @@
             label2.Size = new Size(123, 31);
             label2.TabIndex = 49;
             label2.Text = "University";
+            label2.Click += label2_Click;
             // 
             // label4
             // 
@@ -77,6 +80,7 @@
             label3.Size = new Size(79, 31);
             label3.TabIndex = 56;
             label3.Text = "Home";
+            label3.Click += label3_Click;
             // 
             // panel2
             // 
@@ -113,6 +117,7 @@
             label7.Size = new Size(118, 31);
             label7.TabIndex = 55;
             label7.Text = "Employee";
+            label7.Click += label7_Click;
             // 
             // label13
             // 
@@ -127,12 +132,37 @@
             label13.TabIndex = 57;
             label13.Text = "EmpName";
             // 
+            // restartbtn2
+            // 
+            restartbtn2.Font = new Font("Tahoma", 12F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            restartbtn2.ForeColor = Color.FromArgb(116, 86, 174);
+            restartbtn2.Location = new Point(753, 303);
+            restartbtn2.Name = "restartbtn2";
+            restartbtn2.Size = new Size(123, 36);
+            restartbtn2.TabIndex = 58;
+            restartbtn2.Text = "Restart";
+            restartbtn2.UseVisualStyleBackColor = true;
+            restartbtn2.Click += restartbtn2_Click;
+            // 
+            // label9
+            // 
+            label9.AutoSize = true;
+            label9.Font = new Font("Segoe UI", 15F, FontStyle.Bold);
+            label9.ForeColor = Color.White;
+            label9.Location = new Point(398, 15);
+            label9.Name = "label9";
+            label9.Size = new Size(154, 28);
+            label9.TabIndex = 60;
+            label9.Text = "Top 10 student";
+            // 
             // dashBoard
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.FromArgb(116, 86, 174);
             ClientSize = new Size(957, 573);
+            Controls.Add(label9);
+            Controls.Add(restartbtn2);
             Controls.Add(label2);
             Controls.Add(label4);
             Controls.Add(label3);
@@ -156,5 +186,7 @@
         private Label label6;
         private Label label7;
         private Label label13;
+        private Button restartbtn2;
+        private Label label9;
     }
 }

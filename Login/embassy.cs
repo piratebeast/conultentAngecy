@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
 
-
 namespace Login
 {
     public partial class embassy : Form
@@ -20,6 +19,7 @@ namespace Login
             InitializeComponent();
             DisplayEmbassy();
             embassyDGV.CellClick += embassyDGV_CellContentClick;
+            embassyDGV.CellFormatting += embassyDGV_Cellformation;
         }
 
         SqlConnection Con = new SqlConnection("Data Source=(LocalDB)\\MSSQLLocalDB;AttachDbFilename=C:\\Users\\012sh\\OneDrive\\Documents\\consultantAgencyDb.mdf;Integrated Security=True;Connect Timeout=30");
@@ -47,36 +47,65 @@ namespace Login
             workPrgCb.SelectedIndex = 0;
         }
 
+        private bool ValidateInput()
+        {
+            if (string.IsNullOrEmpty(studentNameTb.Text))
+            {
+                MessageBox.Show("Enter a valid name.");
+                return false;
+            }
+            if(string.IsNullOrEmpty(passportNumTb.Text))
+            {
+                MessageBox.Show("Enter a valid Passport Number.");
+            }
+            if(string.IsNullOrEmpty(conInfoTb.Text)) 
+            {
+                MessageBox.Show("Enter a valid Contact info.");
+                return false; 
+            }
+            if (string.IsNullOrEmpty(policeRepTb.Text))
+            {
+                MessageBox.Show("Enter a Proper police report.");
+                return false;
+            }
+            if (workPrgCb.SelectedIndex == -1) 
+            {
+                MessageBox.Show("Enter a select Progress");
+                return false;
+            }
+            if (deliveredCb.SelectedIndex == -1) 
+            {
+                MessageBox.Show("Enter a Delivery ");
+                return false;
+            }
+            return true;
+        }
+
         private void saveBtn_Click(object sender, EventArgs e)
         {
-            if (studentNameTb.Text == "" || passportNumTb.Text == "" ||
-                conInfoTb.Text == "" || policeRepTb.Text == "" || workPrgCb.SelectedIndex == -1)
+            if (!ValidateInput()) return;
+
+            try
             {
-                MessageBox.Show("Missing Information");
+                Con.Open();
+                SqlCommand cmd = new SqlCommand("INSERT INTO EmbassyTbl (EmbName, EmbPortNum, EmbCon, EmbPoliceRep, EmbWorkPro, DeliveryPro) VALUES (@EN, @EPN, @EC, @EPR, @EWP, @DP)", Con);
+
+                cmd.Parameters.AddWithValue("@EN", studentNameTb.Text);
+                cmd.Parameters.AddWithValue("@EPN", passportNumTb.Text);
+                cmd.Parameters.AddWithValue("@EC", conInfoTb.Text);
+                cmd.Parameters.AddWithValue("@EPR", policeRepTb.Text);
+                cmd.Parameters.AddWithValue("@EWP", workPrgCb.SelectedItem.ToString());
+                cmd.Parameters.AddWithValue("@DP", deliveredCb.SelectedItem.ToString());
+                cmd.ExecuteNonQuery();
+                MessageBox.Show("Embassy Info Added");
+
+                Con.Close();
+                DisplayEmbassy();
+                Clear();
             }
-            else
+            catch (Exception ex)
             {
-                try
-                {
-                    Con.Open();
-                    SqlCommand cmd = new SqlCommand("INSERT INTO EmbassyTbl (EmbName, EmbPortNum, EmbCon, EmbPoliceRep, EmbWorkPro) VALUES (@EN, @EPN, @EC, @EPR, @EWP)", Con);
-
-                    cmd.Parameters.AddWithValue("@EN", studentNameTb.Text);
-                    cmd.Parameters.AddWithValue("@EPN", passportNumTb.Text);
-                    cmd.Parameters.AddWithValue("@EC", conInfoTb.Text);
-                    cmd.Parameters.AddWithValue("@EPR", policeRepTb.Text);
-                    cmd.Parameters.AddWithValue("@EWP", workPrgCb.SelectedItem.ToString());
-                    cmd.ExecuteNonQuery();
-                    MessageBox.Show("Embassy Info Added");
-
-                    Con.Close();
-                    DisplayEmbassy();
-                    Clear();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+                MessageBox.Show(ex.Message);
             }
         }
         int Key = 0;
@@ -93,6 +122,7 @@ namespace Login
                     conInfoTb.Text = selectedRow.Cells[3].Value.ToString();
                     policeRepTb.Text = selectedRow.Cells[4].Value.ToString();
                     workPrgCb.Text = selectedRow.Cells[5].Value.ToString();
+                    deliveredCb.Text = selectedRow.Cells[6].Value.ToString();
 
                     if (!string.IsNullOrEmpty(studentNameTb.Text))
                     {
@@ -108,65 +138,67 @@ namespace Login
 
         private void EditBtn_Click(object sender, EventArgs e)
         {
-            if (studentNameTb.Text == "" || passportNumTb.Text == "" ||
-                conInfoTb.Text == "" || policeRepTb.Text == "" || workPrgCb.SelectedIndex == -1)
+            if (Key == 0)
             {
-                MessageBox.Show("Missing Information");
+                MessageBox.Show("Select an entry to edit.");
+                return;
             }
-            else
+            if (!ValidateInput()) return;
+            try
             {
-                try
-                {
-                    Con.Open();
-                    SqlCommand cmd = new SqlCommand("Update EmbassyTbl set EmbName=@EN, EmbPortNum=@EPN, EmbCon=@EC, EmbPoliceRep=@EPR, EmbWorkPro=@EWP where EmbId=@EKey", Con);
+                Con.Open();
+                SqlCommand cmd = new SqlCommand("Update EmbassyTbl set EmbName=@EN, EmbPortNum=@EPN, EmbCon=@EC, EmbPoliceRep=@EPR, EmbWorkPro=@EWP, DeliveryPro=@DP where EmbId=@EKey", Con);
 
-                    cmd.Parameters.AddWithValue("@EN", studentNameTb.Text);
-                    cmd.Parameters.AddWithValue("@EPN", passportNumTb.Text);
-                    cmd.Parameters.AddWithValue("@EC", conInfoTb.Text);
-                    cmd.Parameters.AddWithValue("@EPR", policeRepTb.Text);
-                    cmd.Parameters.AddWithValue("@EWP", workPrgCb.SelectedItem.ToString());
-                    cmd.Parameters.AddWithValue("@EKey", Key);
-                    cmd.ExecuteNonQuery();
-                    MessageBox.Show("Embassy Info Updated");
+                cmd.Parameters.AddWithValue("@EN", studentNameTb.Text);
+                cmd.Parameters.AddWithValue("@EPN", passportNumTb.Text);
+                cmd.Parameters.AddWithValue("@EC", conInfoTb.Text);
+                cmd.Parameters.AddWithValue("@EPR", policeRepTb.Text);
+                cmd.Parameters.AddWithValue("@EWP", workPrgCb.SelectedItem.ToString());
+                cmd.Parameters.AddWithValue("@DP", deliveredCb.SelectedItem.ToString());
+                cmd.Parameters.AddWithValue("@EKey", Key);
+                cmd.ExecuteNonQuery();
+                MessageBox.Show("Embassy Info Updated");
 
-                    Con.Close();
-                    DisplayEmbassy();
-                    Clear();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+                Con.Close();
+                DisplayEmbassy();
+                Clear();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
             }
         }
 
         private void deletBtn_Click(object sender, EventArgs e)
         {
-            if (studentNameTb.Text == "" || passportNumTb.Text == "" ||
-                conInfoTb.Text == "" || policeRepTb.Text == "" || workPrgCb.SelectedIndex == -1)
+            if (Key == 0)
             {
-                MessageBox.Show("Missing Information");
+                MessageBox.Show("Select an entry to delete.");
+                return;
             }
-            else
+
+            try
             {
-                try
-                {
-                    Con.Open();
-                    SqlCommand cmd = new SqlCommand("delete from EmbassyTbl where EmbId=@EIDKey", Con);
+                Con.Open();
+                SqlCommand cmd = new SqlCommand("delete from EmbassyTbl where EmbId=@EIDKey", Con);
 
-                    cmd.Parameters.AddWithValue("@EIDKey", Key);
-                    cmd.ExecuteNonQuery();
-                    MessageBox.Show("Embassy Info Deleted");
+                cmd.Parameters.AddWithValue("@EIDKey", Key);
+                cmd.ExecuteNonQuery();
+                MessageBox.Show("Embassy Info Deleted");
 
-                    Con.Close();
-                    DisplayEmbassy();
-                    Clear();
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show(ex.Message);
-                }
+                Con.Close();
+                DisplayEmbassy();
+                Clear();
             }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+
+        private void embassyDGV_Cellformation(object sender, DataGridViewCellFormattingEventArgs e)
+        {
+            e.CellStyle.ForeColor = Color.Black; 
         }
 
         private void label2_Click(object sender, EventArgs e)
@@ -196,6 +228,5 @@ namespace Login
             obj.Show();
             this.Hide();
         }
-
     }
 }
